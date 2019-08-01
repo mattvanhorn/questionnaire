@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import Choice from "./Choice";
 
-function addChoice(currentChoices, str) {
-  let index = currentChoices.length + 1;
+function addChoice(currentChoices, str, choiceKey) {
+  let index = choiceKey;
   let choice = { value: str, index: index };
   return currentChoices.concat([choice]);
 }
@@ -13,8 +13,17 @@ function removeChoice(currentChoices, index) {
   return before.concat(after);
 }
 
+function getRemoveHandler(choices, choice, setChoices) {
+  return function(e) {
+    e.preventDefault();
+    let newChoices = removeChoice(choices, choices.indexOf(choice));
+
+    setChoices(newChoices);
+  };
+}
 const ChoiceList = ({ currentChoices = [] }) => {
   const [choices, setChoices] = useState(currentChoices);
+  const [choiceKey, setChoiceKey] = useState(currentChoices.length + 1);
   return (
     <div>
       <ul>
@@ -22,21 +31,10 @@ const ChoiceList = ({ currentChoices = [] }) => {
           return (
             <li key={choice.index}>
               <Choice choiceObj={choice} choiceList={this} />
-              <a
-                href="/"
-                onClick={function(e) {
-                  e.preventDefault();
-                  let newChoices = removeChoice(
-                    choices,
-                    choices.indexOf(choice)
-                  );
-
-                  setChoices(newChoices);
-                }}
-              >
+              <button onClick={getRemoveHandler(choices, choice, setChoices)}>
                 {" "}
                 delete
-              </a>
+              </button>
             </li>
           );
         })}
@@ -44,7 +42,8 @@ const ChoiceList = ({ currentChoices = [] }) => {
       <button
         onClick={e => {
           e.preventDefault();
-          let newChoices = addChoice(choices, "");
+          let newChoices = addChoice(choices, "", choiceKey);
+          setChoiceKey(choiceKey + 1);
           setChoices(newChoices);
         }}
       >

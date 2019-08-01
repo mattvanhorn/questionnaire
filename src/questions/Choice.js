@@ -25,7 +25,6 @@ class Choice extends Component {
         type="text"
         value={this.state.value}
         onChange={e => {
-          console.log(this.state.choiceList);
           this.setState({
             choiceList: this.replaceListItem(
               this.state.choiceList,
