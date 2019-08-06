@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Link } from "@reach/router";
 import QuestionnaireListItem from "./QuestionnaireListItem";
+import { getQuestionnaires } from './lib/client';
 
 class QuestionnaireList extends Component {
   constructor(props) {
@@ -9,76 +10,18 @@ class QuestionnaireList extends Component {
     this.state = {
       questionnaires: props.questionnaires || []
     };
+
+    this.setQuestionnaires = this.setQuestionnaires.bind(this);
   }
 
   componentDidMount() {
-    this.setQuestionnaires([]);
-    this.setQuestionnaires(this.getQuestionnairesList());
+    getQuestionnaires(this.setQuestionnaires);
   }
 
   componentDidUpdate(prevProps) {
     if (this.props.questionnaires !== prevProps.questionnaires) {
-      this.setQuestionnaires(this.getQuestionnairesList());
+      getQuestionnaires(this.setQuestionnaires);
     }
-  }
-
-  getQuestionnairesList() {
-    const cannedData = [
-      {
-        id: 1,
-        authorId: 49,
-        name: "Sample Questionnaire",
-        deleted: false,
-        published: false,
-        questions: [
-          {
-            id: 2,
-            index: 1,
-            choices: [],
-            answers: [],
-            value: "What is your favorite food?",
-            type: "FILL_IN",
-            insertedAt: "2019-07-26T17:25:42.382Z",
-            updatedAt: "2019-07-26T17:25:42.382Z"
-          },
-          {
-            id: 1,
-            index: 0,
-            choices: [
-              {
-                id: 3,
-                index: 1,
-                value: "Dog",
-                insertedAt: "2019-07-26T17:25:42.380Z",
-                updatedAt: "2019-07-26T17:25:42.380Z"
-              },
-              {
-                id: 2,
-                index: 2,
-                value: "Bird",
-                insertedAt: "2019-07-26T17:25:42.377Z",
-                updatedAt: "2019-07-26T17:25:42.377Z"
-              },
-              {
-                id: 1,
-                index: 0,
-                value: "Cat",
-                insertedAt: "2019-07-26T17:25:42.373Z",
-                updatedAt: "2019-07-26T17:25:42.373Z"
-              }
-            ],
-            answers: [],
-            value: "What pets do you have?",
-            type: "CHOOSE_MANY",
-            insertedAt: "2019-07-26T17:25:42.370Z",
-            updatedAt: "2019-07-26T17:25:42.370Z"
-          }
-        ],
-        insertedAt: "2019-07-26T17:25:42.340Z",
-        updatedAt: "2019-07-26T17:25:42.340Z"
-      }
-    ];
-    return cannedData;
   }
 
   setQuestionnaires(qList) {
@@ -86,17 +29,21 @@ class QuestionnaireList extends Component {
   }
 
   render() {
+    const { questionnaires } = this.state;
+
     return (
       <div>
         <table className="questionnaires">
           <thead>
             <tr>
+              <th>Id</th>
               <th>Name</th>
+              <th>Questions</th>
               <th colSpan={3}>Actions</th>
             </tr>
           </thead>
           <tbody>
-            {this.state.questionnaires.map((q, idx) => (
+            {questionnaires.map((q, idx) => (
               <QuestionnaireListItem key={`qq-${idx}`} item={q} />
             ))}
           </tbody>
@@ -106,8 +53,5 @@ class QuestionnaireList extends Component {
     );
   }
 }
-export default QuestionnaireList;
 
-//
-//   profiles.allQuestionnaires().then(list => {
-//   });
+export default QuestionnaireList;

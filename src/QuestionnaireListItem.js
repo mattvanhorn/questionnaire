@@ -2,21 +2,21 @@ import React from "react";
 
 const QuestionnaireListItem = ({ item }) => {
   function getDeleteHandler(id) {
-    return function(e) {
+    return function (e) {
       e.preventDefault();
       alert("deleting questionnaire " + id);
     };
   }
 
   function getEditHandler(id) {
-    return function(e) {
+    return function (e) {
       e.preventDefault();
       alert("editing questionnaire " + id);
     };
   }
 
   function getPublishHandler(id) {
-    return function(e) {
+    return function (e) {
       e.preventDefault();
       alert("publishing questionnaire " + id);
     };
@@ -33,8 +33,20 @@ const QuestionnaireListItem = ({ item }) => {
   }
 
   return (
-    <tr key={item.name}>
+    <tr key={item.id}>
+      <td>{item.id}</td>
       <td>{item.name}</td>
+      <td>
+        <ul>
+          {item.questions.map((question) => {
+            const choices = question.choices.map((a) => { return a.value }).join(', ');
+
+            return (
+              <li key={question.id}>{question.value} {choices ? `(${choices})` : null}</li>
+            )
+          })}
+        </ul>
+      </td>
       <td>{editButton}</td>
       <td>{publishButton}</td>
       <td>
