@@ -56,6 +56,7 @@ class QuestionnaireForm extends Component {
     super(props);
     // Don't call this.setState() here!
     this.state = {
+      name: sampleData.data.name,
       author_id: sampleData.data.author_id,
       questions: sampleData.data.questions,
       newQuestionType: "FILL_IN",
@@ -147,8 +148,14 @@ class QuestionnaireForm extends Component {
 
   saveDraft(e) {
     e.preventDefault();
-    console.log(this.state.questions);
+    let payload = {
+      questions: this.state.questions,
+      name: this.state.name,
+      author_id: this.state.author_id
+    };
+    console.log(JSON.stringify(payload));
   }
+
   render() {
     let questions = this.state.questions;
     let author_id = this.state.author_id;
@@ -162,23 +169,24 @@ class QuestionnaireForm extends Component {
         Create Questionnaire
         <div>
           <label>
-            Name: <input type="text" name="firstName" value={name} required />
+            Name:{" "}
+            <input
+              type="text"
+              name="name"
+              value={name}
+              onChange={n => this.setState({ name: n })}
+              required
+            />
           </label>
         </div>
         <div>
           <label>
             Author:{" "}
-            <select name="author_id">
-              <option selected={author_id === undefined ? true : false}>
-                Choose One
-              </option>
+            <select name="author_id" defaultValue={author_id}>
+              <option>Choose One</option>
               {this.getAdminList().map(function(admin) {
                 return (
-                  <option
-                    key={admin.id}
-                    value={admin.id}
-                    selected={author_id === admin.id ? true : false}
-                  >
+                  <option key={admin.id} value={admin.id}>
                     {admin.name}
                   </option>
                 );
