@@ -1,7 +1,5 @@
 import React, { Component } from "react";
-
-import FillInQuestion from "./questions/FillInQuestion";
-import ChooseManyQuestion from "./questions/ChooseManyQuestion";
+import QuestionListContainer from "./questions/QuestionListContainer";
 
 const sampleData = {
   data: {
@@ -58,92 +56,14 @@ class QuestionnaireForm extends Component {
     this.state = {
       name: sampleData.data.name,
       author_id: sampleData.data.author_id,
-      questions: sampleData.data.questions,
-      newQuestionType: "FILL_IN",
-      newQuestionValue: "enter question"
+      questions: sampleData.data.questions
     };
 
-    this.handleNewQuestionType = this.handleNewQuestionType.bind(this);
-    this.handleNewQuestionValue = this.handleNewQuestionValue.bind(this);
-    this.handleAddQuestion = this.handleAddQuestion.bind(this);
-    this.getRemoveHandler = this.getRemoveHandler.bind(this);
-    this.removeQuestion = this.removeQuestion.bind(this);
-    this.renderQuestion = this.renderQuestion.bind(this);
     this.saveDraft = this.saveDraft.bind(this);
-  }
-
-  questions() {
-    return this.state.questions;
-  }
-
-  setQuestions(qList) {
-    this.setState({ questions: qList });
   }
 
   getAdminList() {
     return admins;
-  }
-
-  addQuestion(qType, qValue) {
-    let newQuestions = this.questions().concat([
-      { type: qType, value: qValue, choices: [] }
-    ]);
-    this.setQuestions(newQuestions);
-  }
-
-  handleNewQuestionType(e) {
-    let newType = e.target.value;
-    this.setState({ newQuestionType: newType });
-  }
-
-  handleNewQuestionValue(e) {
-    let newValue = e.target.value;
-    this.setState({ newQuestionValue: newValue });
-  }
-
-  handleAddQuestion(e) {
-    e.preventDefault();
-    let newQuestions = this.state.questions.concat([
-      {
-        type: this.state.newQuestionType,
-        value: this.state.newQuestionValue,
-        choices: []
-      }
-    ]);
-    this.setState({ questions: newQuestions });
-  }
-
-  renderQuestion(question, index) {
-    switch (question.type) {
-      case "FILL_IN":
-        return FillInQuestion({
-          question: question,
-          removeHandler: this.getRemoveHandler(index)
-        });
-      case "CHOOSE_MANY":
-        return ChooseManyQuestion({
-          question: question,
-          removeHandler: this.getRemoveHandler(index)
-        });
-      default:
-        return "WTF?";
-    }
-  }
-
-  removeQuestion(currentQuestions, index) {
-    var before = currentQuestions.slice(0, index);
-    var after = currentQuestions.slice(index + 1);
-    return before.concat(after);
-  }
-
-  getRemoveHandler(index) {
-    let currentQuestions = this.state.questions;
-    let form = this;
-    return function(e) {
-      e.preventDefault();
-      let newQuestions = form.removeQuestion(currentQuestions, index);
-      form.setState({ questions: newQuestions });
-    };
   }
 
   saveDraft(e) {
@@ -157,7 +77,6 @@ class QuestionnaireForm extends Component {
   }
 
   render() {
-    let questions = this.state.questions;
     let author_id = this.state.author_id;
     return (
       <form
@@ -195,27 +114,8 @@ class QuestionnaireForm extends Component {
           </label>
           <div>
             <h3>Questions</h3>
-            <ol>{questions.map(this.renderQuestion)}</ol>
+            <QuestionListContainer questions={this.state.questions} />
             <button onClick={this.saveDraft}>Save Draft</button>
-            <div>
-              <p>{this.state.newQuestionType}</p>
-              <select
-                name="newQuestionType"
-                onBlur={this.handleNewQuestionType}
-                onChange={this.handleNewQuestionType}
-                defaultValue={this.state.newQuestionType}
-              >
-                <option value="FILL_IN"> Fill In </option>
-                <option value="CHOOSE_MANY"> Choose Many </option>
-              </select>{" "}
-              <input
-                type="text"
-                name="newQuestionValue"
-                value={this.state.newQuestionValue}
-                onChange={this.handleNewQuestionValue}
-              />
-              <button onClick={this.handleAddQuestion}>Add</button>
-            </div>
           </div>
         </div>
       </form>
