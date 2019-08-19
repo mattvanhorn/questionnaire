@@ -2,6 +2,7 @@ import React from "react";
 import ChoiceListContainer from "./ChoiceListContainer";
 
 const ChooseManyQuestion = ({
+  id,
   name,
   value,
   choices,
@@ -16,7 +17,7 @@ const ChooseManyQuestion = ({
       onChange={updateHandler}
     />
     <button onClick={deleteHandler}>delete</button>
-    <ChoiceListContainer choices={choices} />
+    <ChoiceListContainer choices={choices} questionId={id} />
   </div>
 );
 

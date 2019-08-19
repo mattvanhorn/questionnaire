@@ -6,30 +6,31 @@ const QuestionList = ({
   questions,
   newQuestionType,
   newQuestionValue,
-  newQuestionTypeHandler,
-  newQuestionValueHandler,
+  handleNewQuestionType,
+  handleNewQuestionValue,
   addHandler,
   deleteHandler,
   updateHandler
 }) => {
-  function renderQuestion(question, index) {
+  function renderQuestion(updateHandler, deleteHandler, question, index) {
     switch (question.type) {
       case "FILL_IN":
         return (
           <FillInQuestion
             name={question.name}
             value={question.value}
-            updateHandler={updateHandler.bind(this, index)}
+            updateHandler={updateHandler.bind(this, question)}
             deleteHandler={deleteHandler.bind(this, index)}
           />
         );
       case "CHOOSE_MANY":
         return (
           <ChooseManyQuestion
+            id={question.id}
             name={question.name}
             value={question.value}
             choices={question.choices}
-            updateHandler={updateHandler.bind(this, index)}
+            updateHandler={updateHandler.bind(this, question)}
             deleteHandler={deleteHandler.bind(this, index)}
           />
         );
@@ -37,20 +38,23 @@ const QuestionList = ({
         return "WTF?";
     }
   }
-
   return (
     <div>
       <ol>
         {questions.map(function(question, idx) {
-          return <li key={question.key}>{renderQuestion(question, idx)}</li>;
+          return (
+            <li key={question.key}>
+              {renderQuestion(updateHandler, deleteHandler, question, idx)}
+            </li>
+          );
         })}
       </ol>
       <div>
         <p>{newQuestionType}</p>
         <select
           name="newQuestionType"
-          onBlur={newQuestionTypeHandler}
-          onChange={newQuestionTypeHandler}
+          onBlur={handleNewQuestionType}
+          onChange={handleNewQuestionType}
           defaultValue={newQuestionType}
         >
           <option value="FILL_IN"> Fill In </option>
@@ -59,8 +63,8 @@ const QuestionList = ({
         <input
           type="text"
           name="newQuestionValue"
-          value={newQuestionValue}
-          onChange={newQuestionValueHandler}
+          defaultValue={newQuestionValue}
+          onChange={handleNewQuestionValue}
         />
         <button onClick={addHandler}>Add</button>
       </div>

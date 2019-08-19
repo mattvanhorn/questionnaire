@@ -3,9 +3,10 @@ import ChoiceList from "./ChoiceList";
 const uuidv4 = require("uuid/v4");
 
 class ChoiceListContainer extends React.Component {
-  constructor({ choices }) {
+  constructor({ choices, questionId }) {
     super();
     this.state = {
+      questionId: questionId,
       choices: this.reindex(choices)
     };
     this.deleteChoice = this.deleteChoice.bind(this);

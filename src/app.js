@@ -2,7 +2,7 @@ import React from "react";
 import { render } from "react-dom";
 import { Router, Link } from "@reach/router";
 import QuestionnaireList from "./QuestionnaireList";
-import QuestionnaireForm from "./QuestionnaireForm";
+import QuestionnaireFormContainer from "./QuestionnaireFormContainer";
 
 // import QuestionnaireForm from "./QuestionnaireForm";
 
@@ -23,7 +23,7 @@ const App = () => {
       </header>
       <Router>
         <QuestionnaireList path="/" />
-        <QuestionnaireForm path="/new" />
+        <QuestionnaireFormContainer path="/new" />
       </Router>
     </div>
   );
